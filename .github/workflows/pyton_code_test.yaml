@@ -1,0 +1,40 @@
+name: Assignment Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # Job 1: Provided test job
+  test:
+    name: Simple Hello Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: 23f3004255@ds.study.iitm.ac.in
+        run: echo "Hello, world!"
+
+  # 2: Check Python syntax if Python files exist
+  python-syntax-check:
+    name: Python Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find and check Python files
+        run: |
+          echo "Checking for Python files..."
+          if ls **/*.py 1> /dev/null 2>&1; then
+            echo "Python files found. Running syntax check..."
+            for file in $(find . -name "*.py"); do
+              echo "Checking syntax of $file"
+              python3 -m py_compile "$file" || exit 1
+            done
+            echo "All Python files passed syntax check."
+          else
+            echo "No Python files found, skipping syntax check."
+          fi
+
