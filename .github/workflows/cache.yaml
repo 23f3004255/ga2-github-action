@@ -35,6 +35,10 @@ jobs:
             echo "Cache miss"
           fi
 
-      - name: Install dependencies
+      - name: Install dependencies from requirements.txt
         run: |
-          pip install requests
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found, skipping installation."
+          fi
