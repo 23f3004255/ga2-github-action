@@ -1,0 +1,40 @@
+name: Cache Example
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  cache-job:
+    name: Cache Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache Python dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: cache-5134068
+
+      - name: prime-cache-5134068
+        run: |
+          if [ "${{ steps.cache.outputs.cache-hit }}" = 'true' ]; then
+            echo "Cache hit"
+          else
+            echo "Cache miss"
+          fi
+
+      - name: Install dependencies
+        run: |
+          pip install requests
