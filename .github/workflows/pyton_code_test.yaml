@@ -27,15 +27,24 @@ jobs:
       - name: Find and check Python files
         run: |
           set -e
-          echo "Checking for Python files..."
-          if ls **/*.py 1> /dev/null 2>&1; then
-            echo "Python files found. Running syntax check..."
-            for file in $(find . -name "*.py"); do
-              echo "Checking syntax of $file"
-              python3 -m py_compile "$file"
-            done
-            echo "✅ All Python files passed syntax check."
-          else
-            echo "ℹ️ No Python files found, skipping syntax check."
+          echo "🔍 Searching for Python files..."
+          
+          # Find all .py files (recursively)
+          python_files=$(find . -type f -name "*.py")
+  
+          if [ -z "$python_files" ]; then
+            echo "No Python files found, skipping syntax check."
+            exit 0
           fi
+  
+          echo "Found the following Python files:"
+          echo "$python_files"
+  
+          # Check syntax for each file
+          for file in $python_files; do
+            echo "Checking syntax of $file"
+            python3 -m py_compile "$file"
+          done
+  
+          echo "All Python files passed syntax check."
 
